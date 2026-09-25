@@ -1,0 +1,30 @@
+# RASCUNHO: ajuste os nomes conforme o seu repositório.
+# Dispara quando o workflow de CI termina com falha e pede ao Claude
+# para usar a skill "vigiar-ci" e comentar a causa provável no PR.
+# Requer o segredo ANTHROPIC_API_KEY nas configurações do repositório.
+name: Vigiar CI
+
+on:
+  workflow_run:
+    workflows: ["CI"]        # troque pelo nome exato do seu workflow de testes
+    types: [completed]
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+
+jobs:
+  investigar:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pedir ao Claude para investigar a falha
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Use a skill vigiar-ci. O workflow "${{ github.event.workflow_run.name }}"
+            falhou (run ${{ github.event.workflow_run.id }}). Leia os logs com gh,
+            descubra a causa provável e comente no PR relacionado.

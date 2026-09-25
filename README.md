@@ -34,6 +34,8 @@ Outras ferramentas podem ser utilizadas, desde que seu uso seja documentado e ju
 
 ```text
 .
+├── .claude/skills/     # Skills do Claude Code (planejar-pr, fechar-pr, vigiar-ci)
+├── .github/workflows/  # CI e workflow "Vigiar CI" (dispara a skill vigiar-ci)
 ├── diario/       # Diário das atividades
 ├── SPEC.md       # Especificação do projeto
 ├── AGENTS.md     # Instruções para os agentes
